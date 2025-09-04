@@ -26,6 +26,7 @@ import pages.FormManagement_L1_Pages;
 import pages.StartupPage;
 import testBase.AppTestBase;
 import testdata.LocatorsFactory;
+import testdata.UserActions;
 
 public class FormManagement_L1_TestCases extends AppTestBase {
 	
@@ -48,6 +49,7 @@ public class FormManagement_L1_TestCases extends AppTestBase {
 	StartupPage startupPage;
 	FormManagement_L1_Pages RegisterPageInstance;
 	LocatorsFactory LocatorsFactoryInstance=new LocatorsFactory(driver);
+	UserActions userActions=new UserActions(driver);
 	
 	
 	
@@ -80,7 +82,8 @@ public class FormManagement_L1_TestCases extends AppTestBase {
 		RegisterPageInstance = new FormManagement_L1_Pages(driver);
 		Map<String, String> expectedData = new FileOperations().readExcelPOI(expectedDataFilePath, "alerts_Page");
 		Assert.assertEquals(RegisterPageInstance.clickOnSwitchToAlertandValidateTitleOfPage(), expectedData.get("alertsTitle"));
-		Assert.assertTrue(LocatorsFactoryInstance.getswitchToNavigationMenu(driver).isDisplayed(), "switch to menu is not present in the current page, Please check manually");	
+		Assert.assertEquals(userActions.getTitle(driver),expectedData.get("alertsTitle"));
+//		Assert.assertTrue(LocatorsFactoryInstance.getswitchToNavigationMenu(driver).isDisplayed(), "switch to menu is not present in the current page, Please check manually");	
 	}	
 	
 	@Test(priority = 3, groups = {"sanity"}, description="Click on button to display the alert box and Validate if alert popup is shown.")
@@ -97,7 +100,8 @@ public class FormManagement_L1_TestCases extends AppTestBase {
 		String expectedDataFilePath = testDataFilePath+"expected_data.xlsx";
 		Map<String, String> expectedData = new FileOperations().readExcelPOI(expectedDataFilePath, "userdetails");
 		Assert.assertTrue(RegisterPageInstance.clickOnRegisterLinkandFillTheForms(expectedData), "Register button is not present, please check manually");
-		Assert.assertTrue(LocatorsFactoryInstance.firstNameTextboxIsPresent(driver).isDisplayed(), "First name text field is not present in the current page, Please check manually");
+		Assert.assertTrue(LocatorsFactoryInstance.isFormFilled(expectedData,driver),"Form not filled");
+		//Assert.assertTrue(LocatorsFactoryInstance.firstNameTextboxIsPresent(driver).isDisplayed(), "First name text field is not present in the current page, Please check manually");
 	}	
 
 
@@ -107,6 +111,8 @@ public class FormManagement_L1_TestCases extends AppTestBase {
 		RegisterPageInstance = new FormManagement_L1_Pages(driver);
 		Assert.assertTrue(RegisterPageInstance.clickOnSelectCountryAndSelectEachCountry(), "Register button is not present, please check manually");	
 		Assert.assertTrue(LocatorsFactoryInstance.countryDropdownIsPresent(driver).isDisplayed(), "Country dropdown menu is not present in the current page, Please check manually");
+		Assert.assertTrue(LocatorsFactoryInstance.isAustraliaSelected(),"Australia is not selected");
+		
 	}	
 	
 	@Test(priority = 6, groups = {"sanity"}, description="Click on the country dropdown and Validate if each country option is selectable from the dropdown.")
@@ -114,28 +120,32 @@ public class FormManagement_L1_TestCases extends AppTestBase {
 		RegisterPageInstance = new FormManagement_L1_Pages(driver);
 		Map<String, String> expectedData = new FileOperations().readExcelPOI(expectedDataFilePath, "userdetails");
 		Assert.assertEquals(RegisterPageInstance.selectAustraliaInCountryDrpdownAndValidate(), expectedData.get("CountryName"));
-		Assert.assertTrue(LocatorsFactoryInstance.refreshButton(driver).isDisplayed(), "Country dropdown is not present in the current page, Please check manually");
+		Assert.assertTrue(LocatorsFactoryInstance.isAustraliaSelected(),"Australia is not selected");
+		//Assert.assertTrue(LocatorsFactoryInstance.refreshButton(driver).isDisplayed(), "Country dropdown is not present in the current page, Please check manually");
 	}	
 	
 	@Test(priority = 7, groups = {"sanity"}, description=" Check and uncheck each hobby checkbox and Validate that the checkboxes are responding correctly to user interaction, allowing selection and deselection.")
 	public void checkAndUncheckEachCheckBoxAndValidateThatCheckBox() throws Exception {
 		RegisterPageInstance = new FormManagement_L1_Pages(driver);
 		Assert.assertTrue(RegisterPageInstance.checkUncheckCheckBoxAndValidateThatCheckBox(), "Hobbies check box is not present, please check manually");	
-		Assert.assertTrue(LocatorsFactoryInstance.hockeyCheckBox(driver).isDisplayed(), "Country dropdown menu is not present in the current page, Please check manually");
+		Assert.assertTrue(LocatorsFactoryInstance.areCheckBoxSelected(), "All check boxes not selected");
+		//Assert.assertTrue(LocatorsFactoryInstance.hockeyCheckBox(driver).isDisplayed(), "Country dropdown menu is not present in the current page, Please check manually");
 	}	
 	
 	@Test(priority = 8, groups = {"sanity"}, description="Select each radio button option for gender and Validate that only one radio button option should be selectable at a time.")
 	public void selectEachRadioOptionsForGenderValidateThatOnlyOneRadioButtonShouldBeSelect() throws Exception {
 		RegisterPageInstance = new FormManagement_L1_Pages(driver);
 		Assert.assertTrue(RegisterPageInstance.selectRadioButtonvalidateRadioButtonOptionIsSelectable(), "Radio buttons are  not present, please check manually");	
-		Assert.assertTrue(LocatorsFactoryInstance.maleradioButton(driver).isDisplayed(), "Country dropdown menu is not present in the current page, Please check manually");
+//		Assert.assertTrue(LocatorsFactoryInstance.maleradioButton(driver).isDisplayed(), "Country dropdown menu is not present in the current page, Please check manually");
+		Assert.assertTrue(LocatorsFactoryInstance.isFemaleRadioButtonSelected(), "female radio button is not selected");
 	}	
 	
 	@Test(priority = 9, groups = {"sanity"}, description="Select different dates from the Date Of Birth fields")
 	public void selectMonthYearDateInDropdown() throws Exception {
 		RegisterPageInstance = new FormManagement_L1_Pages(driver);
 		Assert.assertTrue(RegisterPageInstance.selectYearMonthDate(), "date,month and year dropdowns are  not present, please check manually");	
-		Assert.assertTrue(LocatorsFactoryInstance.selectYearDropdown(driver).isDisplayed(), "Country dropdown menu is not present in the current page, Please check manually");
+		Assert.assertTrue(LocatorsFactoryInstance.isDateSelected(), "Required date not selected");
+//		Assert.assertTrue(LocatorsFactoryInstance.selectYearDropdown(driver).isDisplayed(), "Country dropdown menu is not present in the current page, Please check manually");
 	}
 	
 	@AfterClass(alwaysRun = true)
